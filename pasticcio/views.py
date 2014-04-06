@@ -23,6 +23,14 @@ def get_user():
         abort(401)
     g.user = user
 
+@app.before_request
+def autoexpire():
+    if not app.config.get('AUTOEXPIRE', False):
+        return
+    count = model.Paste.purge()
+    if count:
+        app.logger.debug("Auto-purged %d pastes" % count)
+
 @app.template_filter('encrypt')
 def encrypt_filter(s):
     return g.hashid.encrypt(s)

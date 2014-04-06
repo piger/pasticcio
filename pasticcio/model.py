@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy import and_
 from .app import db
 
 
@@ -18,6 +19,17 @@ class Paste(db.Model):
             return self.name
         else:
             return "#%d" % self.id
+
+    @classmethod
+    def purge(cls):
+        now = datetime.utcnow()
+        query = cls.query.filter(and_(cls.expire_on != None,
+                                      cls.expire_on < now))
+        count = query.count()
+        if count:
+            query.delete()
+            db.session.commit()
+        return count
 
 # class User(db.Model):
 #     id = db.Column(db.Integer, primary_key=True)
