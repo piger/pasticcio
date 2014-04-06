@@ -168,7 +168,7 @@ def edit_paste(paste_id):
 
     return render_template('edit_paste.html', form=form, paste=paste)
 
-@app.route('/user/<user_id>')
+@app.route('/user/<int:user_id>')
 def user_pastes(user_id):
     user = model.User.query.get(user_id)
     if user is None:
@@ -176,6 +176,21 @@ def user_pastes(user_id):
     pastes = model.Paste.query.filter_by(user_id=user.id).\
              order_by('created_on desc')
     return render_template('user_pastes.html', pastes=pastes, user=user)
+
+@app.route('/user/<int:user_id>/rekey')
+def user_rekey(user_id):
+    user = model.User.query.get(user_id)
+    if user is None:
+        abort(404)
+    if user != g.user:
+        abort(401)
+
+    if user.api_key:
+        db.session.delete(user.api_key)
+    user.api_key = model.APIKey()
+    db.session.commit()
+
+    return redirect(url_for('user_pastes', user_id=g.user.id))
 
 @app.route('/delete/<paste_id>', methods=['POST'])
 def delete_paste(paste_id):

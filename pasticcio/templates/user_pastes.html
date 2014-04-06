@@ -5,7 +5,7 @@
   <h3>Pastes for {{ user.username }}</h3>
 
   {% if user == g.user %}
-    <h4>API key: {{ user.api_key.key }}</h4>
+    <h4>API key: {{ user.api_key.key }} <a href="{{ url_for('user_rekey', user_id=user.id) }}" class="btn btn-default">New</a></h4>
   {% endif %}
 
   <ul class="list-unstled">
