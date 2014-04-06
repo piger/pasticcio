@@ -4,6 +4,7 @@ from setuptools import setup, find_packages
 setup(
     name='pasticcio',
     version='0.1',
+    description="A very simple pastebin web application",
     author='Daniel Kertesz',
     author_email='daniel@spatof.org',
     license='BSD',

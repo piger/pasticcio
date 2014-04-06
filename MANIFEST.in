@@ -1,0 +1,4 @@
+include config.py.sample README.md LICENSE AUTHORS
+recursive-include qstode/templates *.html
+recursive-include qstode/static *
+recursive-exclude * *~ .DS_Store

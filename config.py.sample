@@ -1,0 +1,4 @@
+DEBUG = False
+SECRET_KEY = '12345'
+SQLALCHEMY_DATABASE_URI = 'mysql://user:password@host/db_name?charset=utf8'
+SITE_TITLE = "My Pastebin"
