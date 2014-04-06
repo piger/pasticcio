@@ -6,7 +6,7 @@
 
   <ul class="list-unstled">
     {% for paste in pastes %}
-      <li><a href="{{ url_for('show_paste', paste_id=paste.id|encrypt) }}">{{ paste.name }}</a> ({{ paste.syntax }}) created on {{ paste.created_on|datetimeformat('long') }}</li>
+      <li><a href="{{ url_for('show_paste', paste_id=paste.id|encrypt) }}">{{ paste.title }}</a> ({{ paste.syntax }}) created on {{ paste.created_on|datetimeformat('long') }}</li>
     {% endfor %}
   </ul>
 

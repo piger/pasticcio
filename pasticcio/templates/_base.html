@@ -26,17 +26,18 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-sm-10 page-main">
+        <div class="col-sm-9 page-main">
+          {% include "_messages.html" %}
           {% block content %}{% endblock %}
         </div>
 
-        <div class="col-sm-2 sidebar">
+        <div class="col-sm-3 sidebar">
           {% if latest_pastes %}
             <h3>Latest Pastes</h3>
             
             <ul class="list-unstyled latest-pastes">
               {% for paste in latest_pastes %}
-                <li><a class="paste-link" href="{{ url_for('show_paste', paste_id=paste.id|encrypt) }}">{{ paste.name or "#" + paste.id|string }}</a> by <a class="paste-user" href="{{ url_for('user_pastes', username=paste.user) }}">{{ paste.user }}</a></li>
+                <li><a class="paste-link" href="{{ url_for('show_paste', paste_id=paste.id|encrypt) }}">{{ paste.title }}</a> by <a class="paste-user" href="{{ url_for('user_pastes', username=paste.user) }}">{{ paste.user }}</a></li>
               {% endfor %}
             </ul>
           {% endif %}

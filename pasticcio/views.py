@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from flask import render_template, redirect, url_for, abort, g, request
+from flask import render_template, redirect, url_for, abort, g, request, flash
 from flask.ext.login import (login_user, login_required, current_user, UserMixin,
                              logout_user)
 from flask_babel import to_user_timezone, lazy_gettext as _
@@ -8,7 +8,7 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name, ClassNotFound
 from pygments.formatters import HtmlFormatter
 from .app import app, db
-from .forms import CreatePasteForm
+from . import forms
 from . import model
 
 
@@ -74,7 +74,7 @@ def timesince(dt, default=None):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    form = CreatePasteForm()
+    form = forms.CreatePasteForm()
 
     if form.validate_on_submit():
         expires = {
@@ -82,12 +82,17 @@ def index():
             '1d': timedelta(days=1),
             '1w': timedelta(weeks=1),
             '1M': timedelta(days=30),
+            'never': None,
         }
-        expire_on = expires.get(form.expire_on.data)
+        expire_delta = expires.get(form.expire_on.data)
+        if expire_delta is not None:
+            expire_on = datetime.utcnow() + expire_delta
+        else:
+            expire_on = None
         paste = model.Paste(name=form.name.data,
                             content=form.content.data,
                             syntax=form.syntax.data,
-                            expire_on=datetime.utcnow() + expire_on,
+                            expire_on=expire_on,
                             user=g.user)
         db.session.add(paste)
         db.session.commit()
@@ -120,3 +125,21 @@ def user_pastes(username):
     pastes = model.Paste.query.filter_by(user=username).\
              order_by('created_on desc')
     return render_template('user_pastes.html', pastes=pastes, username=username)
+
+@app.route('/delete/<paste_id>')
+def delete_paste(paste_id):
+    _id = g.hashid.decrypt(paste_id)
+    paste = model.Paste.query.get(_id)
+    if paste is None:
+        abort(404)
+
+    if paste.user != g.user:
+        abort(401)
+
+    title = paste.title
+    db.session.delete(paste)
+    db.session.commit()
+
+    flash(u"Paste %s deleted" % title, "success")
+
+    return redirect(url_for('index'))

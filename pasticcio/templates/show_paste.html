@@ -9,8 +9,35 @@
 
 {% block content %}
 
-  <h3>{{ paste.name or "#" + paste.id|string }} <small>({{ paste.syntax }}) by {{ paste.user }}</small></h3>
-  <p>Expire in {{ paste.expire_on|timesince }}</p>
+  <div id="modal-delete-paste" class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Delete paste "{{ paste.title }}"?</h4>
+        </div>
+        <div class="modal-body">
+          <p>Please confirm paste deletion</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          
+          <a class="btn btn-danger" href="{{ url_for('delete_paste', paste_id=paste.id|encrypt) }}">Delete</a>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+
+  <h3>{{ paste.title }} <small>({{ paste.syntax }}) by {{ paste.user }}</small></h3>
+  <p>
+    {% if paste.expire_on %}
+      Expire in {{ paste.expire_on|timesince }} 
+    {% else %}
+      Paste won't expire
+    {% endif %}
+    {% if paste.user == g.user %}<button class="btn btn-xs btn-danger" data-toggle="modal" data-target="#modal-delete-paste">Delete</button>{% endif %}
+  </p>
   
   {{ output|safe }}
 

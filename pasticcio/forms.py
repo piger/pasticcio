@@ -18,6 +18,7 @@ class CreatePasteForm(Form):
             ('1d', '1 day'),
             ('1w', '1 week'),
             ('1M', '1 month'),
+            ('never', 'Never'),
         ]
         self.syntax.choices = []
         names = []
