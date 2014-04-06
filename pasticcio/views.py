@@ -85,6 +85,14 @@ def timesince(dt, reverse=False):
 
     return default
 
+def decrypt_paste_id(paste_id):
+    try:
+        _id = g.hashid.decrypt(paste_id)[0]
+        _id = int(_id)
+    except (ValueError, TypeError, IndexError):
+        return None
+    return _id
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = forms.CreatePasteForm()
@@ -118,10 +126,13 @@ def index():
 
 @app.route('/paste/<paste_id>')
 def show_paste(paste_id):
-    _id = g.hashid.decrypt(paste_id)
+    _id = decrypt_paste_id(paste_id)
+    if _id is None:
+        abort(404)
     paste = model.Paste.query.get(_id)
     if paste is None:
-        abort(404)
+        flash("Paste not found!", "warning")
+        return redirect(url_for('index'))
 
     try:
         lexer = get_lexer_by_name(paste.syntax)
@@ -142,7 +153,9 @@ def user_pastes(user):
 
 @app.route('/delete/<paste_id>')
 def delete_paste(paste_id):
-    _id = g.hashid.decrypt(paste_id)
+    _id = decrypt_paste_id(paste_id)
+    if _id is None:
+        abort(404)
     paste = model.Paste.query.get(_id)
     if paste is None:
         abort(404)
