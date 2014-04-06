@@ -30,7 +30,7 @@ def encrypt_filter(s):
 @app.context_processor
 def latest_pastes():
     pastes = model.Paste.query.order_by('created_on desc').limit(10).all()
-    return dict(pastes=pastes)
+    return dict(latest_pastes=pastes)
 
 @app.template_filter()
 def timesince(dt, default=None):
@@ -114,3 +114,9 @@ def show_paste(paste_id):
         output = paste.content
 
     return render_template('show_paste.html', paste=paste, output=output)
+
+@app.route('/user/<username>')
+def user_pastes(username):
+    pastes = model.Paste.query.filter_by(user=username).\
+             order_by('created_on desc')
+    return render_template('user_pastes.html', pastes=pastes, username=username)

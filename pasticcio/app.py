@@ -7,3 +7,5 @@ from flask.ext.babel import Babel
 app = Flask('pasticcio')
 db = SQLAlchemy(app)
 babel = Babel(app)
+
+app.config['SITE_TITLE'] = 'Pasticcio'

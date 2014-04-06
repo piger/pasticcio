@@ -31,12 +31,12 @@
         </div>
 
         <div class="col-sm-2 sidebar">
-          {% if pastes %}
+          {% if latest_pastes %}
             <h3>Latest Pastes</h3>
             
-            <ul class="list-unstyled">
-              {% for paste in pastes %}
-                <li><a href="{{ url_for('show_paste', paste_id=paste.id|encrypt) }}">{{ paste.name or "#" + paste.id|string }}</a> by {{ paste.user }}</li>
+            <ul class="list-unstyled latest-pastes">
+              {% for paste in latest_pastes %}
+                <li><a class="paste-link" href="{{ url_for('show_paste', paste_id=paste.id|encrypt) }}">{{ paste.name or "#" + paste.id|string }}</a> by <a class="paste-user" href="{{ url_for('user_pastes', username=paste.user) }}">{{ paste.user }}</a></li>
               {% endfor %}
             </ul>
           {% endif %}
