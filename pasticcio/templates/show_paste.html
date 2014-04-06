@@ -9,7 +9,8 @@
 
 {% block content %}
 
-  <h3>{{ paste.name or "#" + paste.id|string }}</h3>
+  <h3>{{ paste.name or "#" + paste.id|string }} <small>({{ paste.syntax }}) by {{ paste.user }}</small></h3>
+  <p>Expire in {{ paste.expire_on|timesince }}</p>
   
   {{ output|safe }}
 

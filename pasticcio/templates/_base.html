@@ -30,13 +30,16 @@
           {% block content %}{% endblock %}
         </div>
 
-        <div class="col-sm-2">
+        <div class="col-sm-2 sidebar">
+          <h2>Pasticcio</h2>
+
+          
           {% if pastes %}
             <h3>Latest Pastes</h3>
             
             <ul class="list-unstyled">
               {% for paste in pastes %}
-                <li><a href="{{ url_for('show_paste', paste_id=paste.id|encrypt) }}">{{ paste.name or "#" + paste.id|string }}</a></li>
+                <li><a href="{{ url_for('show_paste', paste_id=paste.id|encrypt) }}">{{ paste.name or "#" + paste.id|string }}</a> by {{ paste.user }}</li>
               {% endfor %}
             </ul>
           {% endif %}

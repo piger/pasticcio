@@ -2,22 +2,22 @@ from flask_wtf import Form
 from wtforms import TextField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Optional, Length
 from pygments.lexers import get_all_lexers
-from .model import Paste, User
+from .model import Paste
 
 
 class CreatePasteForm(Form):
     name = TextField('Name', [Optional(), Length(0, 64)])
     content = TextAreaField('Content', [DataRequired()])
     expire_on = SelectField('Expiration time')
-    syntax = SelectField('Syntax')
+    syntax = SelectField('Syntax', default='text')
 
     def __init__(self, *args, **kwargs):
         super(CreatePasteForm, self).__init__(*args, **kwargs)
         self.expire_on.choices = [
-            ('1hr', '1hr'),
-            ('1d', '1d'),
-            ('1w', '1w'),
-            ('1M', '1M'),
+            ('1hr', '1 hour'),
+            ('1d', '1 day'),
+            ('1w', '1 week'),
+            ('1M', '1 month'),
         ]
         self.syntax.choices = []
         names = []
