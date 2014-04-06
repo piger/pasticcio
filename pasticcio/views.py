@@ -4,9 +4,6 @@ from flask.ext.login import (login_user, login_required, current_user, UserMixin
                              logout_user)
 from flask_babel import to_user_timezone, lazy_gettext as _
 from hashids import Hashids
-from pygments import highlight
-from pygments.lexers import get_lexer_by_name, ClassNotFound
-from pygments.formatters import HtmlFormatter
 from .app import app, db
 from . import forms
 from . import model
@@ -133,16 +130,7 @@ def show_paste(paste_id):
 
     delete_form = forms.Form()
 
-    try:
-        lexer = get_lexer_by_name(paste.syntax)
-        formatter = HtmlFormatter(linenos='table', anchorlinenos=True,
-                                  lineanchors='line')
-        output = highlight(paste.content, lexer, formatter)
-    except ClassNotFound as ex:
-        app.logger.error("Pygments error: %s" % str(ex))
-        output = paste.content
-
-    return render_template('show_paste.html', paste=paste, output=output,
+    return render_template('show_paste.html', paste=paste,
                            delete_form=delete_form)
 
 @app.route('/edit/<paste_id>', methods=['GET', 'POST'])

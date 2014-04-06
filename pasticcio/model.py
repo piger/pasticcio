@@ -1,5 +1,8 @@
 from datetime import datetime, timedelta
 from sqlalchemy import and_
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name, ClassNotFound
+from pygments.formatters import HtmlFormatter
 from .app import db
 
 
@@ -27,6 +30,19 @@ class Paste(db.Model):
             return self.name
         else:
             return "#%d" % self.id
+
+    @property
+    def pretty_output(self):
+        try:
+            lexer = get_lexer_by_name(self.syntax)
+            default_lexer = get_lexer_by_name('text')
+            fmt = HtmlFormatter(linenos='table', anchorlinenos=True,
+                                lineanchors='line')
+            output = highlight(self.content, lexer, fmt)
+        except ClassNotFound:
+            output = highlight(self.content, default_lexer, fmt)
+
+        return output
 
     @classmethod
     def purge(cls):
