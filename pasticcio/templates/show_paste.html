@@ -36,7 +36,7 @@
     {% else %}
       Paste won't expire
     {% endif %}
-    {% if paste.user == g.user %}<button class="btn btn-xs btn-danger" data-toggle="modal" data-target="#modal-delete-paste">Delete</button>{% endif %}
+    {% if paste.user == g.user %}<a href="{{ url_for('edit_paste', paste_id=paste.id|encrypt) }}" class="btn btn-default btn-xs">Edit</a> <button class="btn btn-xs btn-danger" data-toggle="modal" data-target="#modal-delete-paste">Delete</button>{% endif %}
   </p>
 
   <div class="paste-show">

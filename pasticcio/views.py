@@ -106,18 +106,7 @@ def index():
     form = forms.CreatePasteForm()
 
     if form.validate_on_submit():
-        expires = {
-            '1hr': timedelta(hours=1),
-            '1d': timedelta(days=1),
-            '1w': timedelta(weeks=1),
-            '1M': timedelta(days=30),
-            'never': None,
-        }
-        expire_delta = expires.get(form.expire_on.data)
-        if expire_delta is not None:
-            expire_on = datetime.utcnow() + expire_delta
-        else:
-            expire_on = None
+        expire_on = model.Paste.get_expiration_date(form.expire_on.data)
         paste = model.Paste(name=form.name.data,
                             content=form.content.data,
                             syntax=form.syntax.data,
@@ -152,6 +141,32 @@ def show_paste(paste_id):
         output = paste.content
 
     return render_template('show_paste.html', paste=paste, output=output)
+
+@app.route('/edit/<paste_id>', methods=['GET', 'POST'])
+def edit_paste(paste_id):
+    _id = decrypt_paste_id(paste_id)
+    if _id is None:
+        abort(404)
+    paste = model.Paste.query.get(_id)
+    if paste is None:
+        flash("Paste not found!", "warning")
+        return redirect(url_for('index'))
+
+    if paste.user != g.user:
+        abort(401)
+
+    form = forms.CreatePasteForm(obj=paste)
+    if form.validate_on_submit():
+        expire_on = model.Paste.get_expiration_date(form.expire_on.data)
+        paste.expire_on = expire_on
+        paste.name = form.name.data
+        paste.content = form.content.data
+        paste.syntax = form.syntax.data
+        db.session.commit()
+
+        return redirect(url_for('show_paste', paste_id=paste_id))
+
+    return render_template('edit_paste.html', form=form, paste=paste)
 
 @app.route('/user/<user>')
 def user_pastes(user):
