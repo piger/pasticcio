@@ -2,7 +2,8 @@
   <div class="container">
     <nav class="page-nav">
       <a class="page-nav-logo" href="{{ url_for('index') }}">{{ config['SITE_TITLE'] }}</a>
-      <a class="page-nav-item active" href="{{ url_for('index') }}"><span class="glyphicon glyphicon-pencil"></span> New paste</a>
+      <a class="page-nav-item {{ active_if('index') }}" href="{{ url_for('index') }}"><span class="glyphicon glyphicon-pencil"></span> New paste</a>
+      <a class="page-nav-item {{ active_if('user_pastes') }}" href="{{ url_for('user_pastes', user=g.user) }}"><span class="glyphicon glyphicon-list"></span> My Pastes</a>
     </nav>
   </div>
 </div>

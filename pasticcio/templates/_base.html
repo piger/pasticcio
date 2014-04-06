@@ -37,7 +37,7 @@
             
             <ul class="list-unstyled latest-pastes">
               {% for paste in latest_pastes %}
-                <li><a class="paste-link" href="{{ url_for('show_paste', paste_id=paste.id|encrypt) }}">{{ paste.title }}</a> by <a class="paste-user" href="{{ url_for('user_pastes', username=paste.user) }}">{{ paste.user }}</a></li>
+                <li><a class="paste-link" href="{{ url_for('show_paste', paste_id=paste.id|encrypt) }}">{{ paste.title }}</a> by <a class="paste-user" href="{{ url_for('user_pastes', user=paste.user) }}">{{ paste.user }}</a></li>
               {% endfor %}
             </ul>
           {% endif %}
