@@ -2,7 +2,11 @@
 {% import "_helpers.html" as h %}
 
 {% block content %}
-  <h3>Pastes for {{ user }}</h3>
+  <h3>Pastes for {{ user.username }}</h3>
+
+  {% if user == g.user %}
+    <h4>API key: {{ user.api_key.key }}</h4>
+  {% endif %}
 
   <ul class="list-unstled">
     {% for paste in pastes %}

@@ -13,9 +13,20 @@ def get_hashid():
 
 @app.before_request
 def get_user():
-    user = request.environ.get('REMOTE_USER', 'sand')
-    if user is None:
+    env = request.environ
+    username = env.get('REMOTE_USER', env.get('REDIRECT_REMOTE_USER'))
+    username = 'sand'
+    if username is None:
         abort(401)
+
+    user = model.User.query.filter_by(username=username).first()
+    if user is None:
+        api_key = model.APIKey()
+        user = model.User(username=username, api_key=api_key)
+        db.session.add(user)
+        db.session.commit()
+        db.session.refresh(user)
+        
     g.user = user
 
 @app.before_request
@@ -157,9 +168,12 @@ def edit_paste(paste_id):
 
     return render_template('edit_paste.html', form=form, paste=paste)
 
-@app.route('/user/<user>')
-def user_pastes(user):
-    pastes = model.Paste.query.filter_by(user=user).\
+@app.route('/user/<user_id>')
+def user_pastes(user_id):
+    user = model.User.query.get(user_id)
+    if user is None:
+        abort(404)
+    pastes = model.Paste.query.filter_by(user_id=user.id).\
              order_by('created_on desc')
     return render_template('user_pastes.html', pastes=pastes, user=user)
 

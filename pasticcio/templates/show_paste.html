@@ -32,7 +32,7 @@
     </div><!-- /.modal -->
   </form>
 
-  <h3>{{ paste.title }} <small>({{ paste.syntax }}) by {{ paste.user }}</small></h3>
+  <h3>{{ paste.title }} <small>({{ paste.syntax }}) by {{ paste.user.username }}</small></h3>
   <p>
     {% if paste.expire_on %}
       Expire in {{ paste.expire_on|timesince(reverse=True) }} 

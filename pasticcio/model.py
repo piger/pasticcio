@@ -1,3 +1,5 @@
+import hashlib
+import os
 from datetime import datetime, timedelta
 from sqlalchemy import and_
 from pygments import highlight
@@ -21,8 +23,8 @@ class Paste(db.Model):
     expire_on = db.Column(db.DateTime)
     content = db.Column(db.UnicodeText)
     syntax = db.Column(db.String(64))
-    user = db.Column(db.String(64))
-    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    # user = db.Column(db.String(64))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     @property
     def title(self):
@@ -62,7 +64,15 @@ class Paste(db.Model):
             return datetime.utcnow() + delta
         return delta
 
-# class User(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String(64))
-#     pastes = db.relationship('Paste', backref='user')
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64))
+    pastes = db.relationship('Paste', backref='user')
+    api_key = db.relationship('APIKey', uselist=False, backref='user')
+
+class APIKey(db.Model):
+    key = db.Column(db.String(40), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __init__(self):
+        self.key = hashlib.sha1(os.urandom(20)).hexdigest()
