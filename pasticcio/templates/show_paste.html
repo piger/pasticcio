@@ -9,25 +9,28 @@
 
 {% block content %}
 
-  <div id="modal-delete-paste" class="modal fade">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">Delete paste "{{ paste.title }}"?</h4>
-        </div>
-        <div class="modal-body">
-          <p>Please confirm paste deletion</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          
-          <a class="btn btn-danger" href="{{ url_for('delete_paste', paste_id=paste.id|encrypt) }}">Delete</a>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
-
+  <form action="{{ url_for('delete_paste', paste_id=paste.id|encrypt) }}" method="post" role="form">
+    {{ delete_form.hidden_tag() }}
+    
+    <div id="modal-delete-paste" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Delete paste "{{ paste.title }}"?</h4>
+          </div>
+          <div class="modal-body">
+            <p>Please confirm paste deletion</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+  </form>
 
   <h3>{{ paste.title }} <small>({{ paste.syntax }}) by {{ paste.user }}</small></h3>
   <p>

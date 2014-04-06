@@ -131,6 +131,8 @@ def show_paste(paste_id):
         flash("Paste not found!", "warning")
         return redirect(url_for('index'))
 
+    delete_form = forms.Form()
+
     try:
         lexer = get_lexer_by_name(paste.syntax)
         formatter = HtmlFormatter(linenos='table', anchorlinenos=True,
@@ -140,7 +142,8 @@ def show_paste(paste_id):
         app.logger.error("Pygments error: %s" % str(ex))
         output = paste.content
 
-    return render_template('show_paste.html', paste=paste, output=output)
+    return render_template('show_paste.html', paste=paste, output=output,
+                           delete_form=delete_form)
 
 @app.route('/edit/<paste_id>', methods=['GET', 'POST'])
 def edit_paste(paste_id):
@@ -174,7 +177,7 @@ def user_pastes(user):
              order_by('created_on desc')
     return render_template('user_pastes.html', pastes=pastes, user=user)
 
-@app.route('/delete/<paste_id>')
+@app.route('/delete/<paste_id>', methods=['POST'])
 def delete_paste(paste_id):
     _id = decrypt_paste_id(paste_id)
     if _id is None:
@@ -186,10 +189,14 @@ def delete_paste(paste_id):
     if paste.user != g.user:
         abort(401)
 
-    title = paste.title
-    db.session.delete(paste)
-    db.session.commit()
+    form = forms.Form()
+    if form.validate_on_submit():
+        title = paste.title
+        db.session.delete(paste)
+        db.session.commit()
 
-    flash(u"Paste %s deleted" % title, "success")
+        flash(u"Paste %s deleted" % title, "success")
 
-    return redirect(url_for('index'))
+        return redirect(url_for('index'))
+
+    abort(400)
