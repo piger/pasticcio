@@ -1,6 +1,7 @@
 import hashlib
 import os
 from datetime import datetime, timedelta
+from flask import g, url_for
 from sqlalchemy import and_
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name, ClassNotFound
@@ -25,6 +26,21 @@ class Paste(db.Model):
     syntax = db.Column(db.String(64))
     # user = db.Column(db.String(64))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def to_dict(self):
+        if self.expire_on is None:
+            expire_on = None
+        else:
+            expire_on = self.expire_on.isoformat()
+        rv = {
+            'title': self.title,
+            'created_on': self.created_on.isoformat(),
+            'expire_on': expire_on,
+            'syntax': self.syntax,
+            'link': url_for('show_paste', paste_id=g.hashid.encrypt(self.id),
+                            _external=True),
+        }
+        return rv
 
     @property
     def title(self):

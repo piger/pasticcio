@@ -7,6 +7,7 @@ from .cleaner import cleaner
 
 from . import model
 from . import views
+from . import api
 
 
 def create_app(config=None):
