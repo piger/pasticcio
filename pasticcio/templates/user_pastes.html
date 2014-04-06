@@ -6,7 +6,7 @@
 
   <ul class="list-unstled">
     {% for paste in pastes %}
-      <li><a href="{{ url_for('show_paste', paste_id=paste.id|encrypt) }}">{{ paste.title }}</a> ({{ paste.syntax }}) created on {{ paste.created_on|datetimeformat('long') }}</li>
+      <li><a href="{{ url_for('show_paste', paste_id=paste.id|encrypt) }}">{{ paste.title }}</a> ({{ paste.syntax }}) <span class="text-muted">created {{ paste.created_on|timesince }}{% if paste.expire_on %}, expire in {{ paste.expire_on|timesince(reverse=True) }}{% endif %}</span></li>
     {% endfor %}
   </ul>
 

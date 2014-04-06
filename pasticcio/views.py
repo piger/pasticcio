@@ -41,7 +41,7 @@ def active_if_processor():
     return dict(active_if=active_if)
 
 @app.template_filter()
-def timesince(dt, default=None):
+def timesince(dt, reverse=False):
     """Convert a timestamp to a textual string describing "how much time ago".
 
     The parameter `dt` is a :class:`datetime.datetime` instance without
@@ -52,13 +52,15 @@ def timesince(dt, default=None):
     License: Public Domain
     """
 
-    if default is None:
-        default = _(u'now')
+    default = _(u'now')
 
     user_dt = to_user_timezone(dt)
     now_dt = to_user_timezone(datetime.utcnow())
 
-    diff = user_dt - now_dt
+    if reverse:
+        diff = user_dt - now_dt
+    else:
+        diff = now_dt - user_dt
 
     periods = (
         (diff.days / 365, _(u'year'), _(u'years')),
@@ -76,7 +78,10 @@ def timesince(dt, default=None):
                 timestr = singular
             else:
                 timestr = plural
-            return _("%(num)s %(time)s", num=period, time=timestr)
+            if reverse:
+                return _("%(num)s %(time)s", num=period, time=timestr)
+            else:
+                return _("%(num)s %(time)s ago", num=period, time=timestr)
 
     return default
 
