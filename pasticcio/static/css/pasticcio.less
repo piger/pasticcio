@@ -1,5 +1,7 @@
 /* pasticcio.less */
 
+@monospace: "Lucida Sans Typewriter", "Lucida Console", Monaco, "Bitstream Vera Sans Mono", monospace;
+
 /* *** navigation bar *** */
 .page-navbar {
   background-color: #428bca;
@@ -68,9 +70,31 @@
 /* *** paste form *** */
 #paste-form {
   #content {
-    font-family: "Lucida Sans Typewriter", "Lucida Console", Monaco, "Bitstream Vera Sans Mono", monospace;
+    font-family: @monospace;
     font-size: 13px;
   }
+}
+
+/* *** show paste *** */
+.paste-show {
+  pre {
+    background: none;
+    border: none;
+
+    font-family: @monospace;
+    font-size: 12px;
+  }
+
+  table {
+    background-color: #F5F5F5;
+    border: 1px solid #CCC;
+    border-radius: 4px;
+    display: block;
+  }
+}
+
+.paste-show .highlight-line {
+  background-color: #F7ECC1;
 }
 
 /* *** MAIN *** */

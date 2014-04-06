@@ -125,7 +125,8 @@ def show_paste(paste_id):
 
     try:
         lexer = get_lexer_by_name(paste.syntax)
-        formatter = HtmlFormatter(nobackground=True)
+        formatter = HtmlFormatter(linenos='table', anchorlinenos=True,
+                                  lineanchors='line')
         output = highlight(paste.content, lexer, formatter)
     except ClassNotFound as ex:
         app.logger.error("Pygments error: %s" % str(ex))
