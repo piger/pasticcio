@@ -1,7 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from flask import render_template, redirect, url_for, abort, g, request, flash
-from flask.ext.login import (login_user, login_required, current_user, UserMixin,
-                             logout_user)
 from flask_babel import to_user_timezone, lazy_gettext as _
 from hashids import Hashids
 from .app import app, db
