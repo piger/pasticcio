@@ -1,0 +1,43 @@
+{%- macro render_input(field, help='') %}
+<div class="form-group {%- if field.errors %} has-error{%- endif %}">
+  <label for="{{ field.id }}">{{ field.label.text }}
+    {%- if field.flags.required %}
+    <abbr class="field-required" title="{{ "This field must be filled in" }}">*</abbr>
+    {%- endif %}</label>
+
+  {{ field(class_="form-control", **kwargs) }}
+
+    {% if help %}
+      <p class="help-block">{{ help }}</p>
+    {% endif %}
+
+    {% for error in field.errors %}
+      <p class="help-block">{{ error }}</p>
+    {% endfor %}
+</div>
+{% endmacro -%}
+
+
+{%- macro render_select(field, help='', class_='') %}
+<div class="form-group">
+
+  <label for="{{ field.id }}">{{ field.label.text }}
+    {%- if field.flags.required %}
+    <abbr class="field-required" title="{{ "This field must be filled in" }}">*</abbr>
+    {%- endif %}</label>
+
+  <select class="form-control {{ class_ }}" name="{{ field.name }}" id="{{ field.id }}">
+    {% for value, label, selected in field.iter_choices() %}
+      <option value="{{ value }}"{%- if selected  %} selected{%- endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+
+  {% if help %}
+    <p class="help-block">{{ help }}</p>
+  {% endif %}
+
+  {% for error in field.errors %}
+    <p class="help-block">{{ error }}</p>
+  {% endfor %}
+</div>
+{%- endmacro %}

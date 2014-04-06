@@ -1,0 +1,16 @@
+{% extends "_base.html" %}
+{% import "_helpers.html" as h %}
+
+{% block head %}
+  {{ super() }}
+  
+  <link href="{{ url_for('static', filename='css/pygments.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+  <h3>{{ paste.name or "#" + paste.id|string }}</h3>
+  
+  {{ output|safe }}
+
+{% endblock %}
