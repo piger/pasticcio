@@ -55,7 +55,7 @@ class PasteAPI(MethodView):
                 syntax = guess_syntax(form.content.data)
             else:
                 syntax = form.syntax.data
-            expire_on = Paste.get_expiration_date(form.expire_on.data)
+            expire_on = form.get_expiration_date()
             paste = Paste(name=form.name.data,
                           content=form.content.data,
                           syntax=syntax,

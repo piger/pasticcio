@@ -112,7 +112,7 @@ def index():
     form = forms.CreatePasteForm()
 
     if form.validate_on_submit():
-        expire_on = model.Paste.get_expiration_date(form.expire_on.data)
+        expire_on = form.get_expiration_date()
         paste = model.Paste(name=form.name.data,
                             content=form.content.data,
                             syntax=form.syntax.data,

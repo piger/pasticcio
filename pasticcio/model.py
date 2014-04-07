@@ -11,11 +11,11 @@ from .app import db
 
 class Paste(db.Model):
     expirations = {
-        '1hr': timedelta(hours=1),
-        '1d': timedelta(days=1),
-        '1w': timedelta(weeks=1),
-        '1M': timedelta(days=30),
-        'never': None,
+        '1hr': (timedelta(hours=1), '1 hour'),
+        '1d': (timedelta(days=1), '1 day'),
+        '1w': (timedelta(weeks=1), '1 week'),
+        '1M': (timedelta(days=30), '1 month'),
+        'never': (timedelta(hours=0), 'Never'),
     }
 
     id = db.Column(db.Integer, primary_key=True)
@@ -72,13 +72,6 @@ class Paste(db.Model):
             query.delete()
             db.session.commit()
         return count
-
-    @classmethod
-    def get_expiration_date(self, value):
-        delta = self.expirations.get(value)
-        if delta is not None:
-            return datetime.utcnow() + delta
-        return delta
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
