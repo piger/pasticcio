@@ -24,7 +24,6 @@ class Paste(db.Model):
     expire_on = db.Column(db.DateTime)
     content = db.Column(db.UnicodeText)
     syntax = db.Column(db.String(64))
-    # user = db.Column(db.String(64))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def to_dict(self):
@@ -32,13 +31,14 @@ class Paste(db.Model):
             expire_on = None
         else:
             expire_on = self.expire_on.isoformat()
+        paste_id = g.hashid.encrypt(self.id)
         rv = {
             'title': self.title,
             'created_on': self.created_on.isoformat(),
             'expire_on': expire_on,
             'syntax': self.syntax,
-            'link': url_for('show_paste', paste_id=g.hashid.encrypt(self.id),
-                            _external=True),
+            'link': url_for('show_paste', paste_id=paste_id, _external=True),
+            'paste_id': paste_id,
         }
         return rv
 
