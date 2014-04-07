@@ -28,7 +28,6 @@ class CreatePasteForm(Form):
                              reverse=True)
         # keep only the key and the label
         expirations = [(x[0], x[1][1]) for x in expirations]
-        app.logger.debug("exp = %r", expirations)
         self.expire_on.choices = expirations[:]
 
         self.syntax.choices = []
