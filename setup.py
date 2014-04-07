@@ -25,5 +25,6 @@ setup(
             'pasticcio = pasticcio.main:main',
         ],
     },
+    scripts=['scripts/pasticcio-cli'],
 )
             
