@@ -15,7 +15,6 @@ def get_hashid():
 def get_user():
     env = request.environ
     username = env.get('REMOTE_USER', env.get('REDIRECT_REMOTE_USER'))
-    username = 'sand'
     if username is None:
         abort(401)
 
