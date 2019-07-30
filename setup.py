@@ -9,7 +9,7 @@ setup(
     author_email='daniel@spatof.org',
     license='BSD',
     install_requires=[
-        'Flask==0.12.4',
+        "Flask==1.0.2",
         'Flask-SQLAlchemy==1.0',
         'Flask-WTF==0.9.5',
         'Flask-Babel==0.9',
