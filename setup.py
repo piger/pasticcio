@@ -15,7 +15,7 @@ setup(
         'Flask-Babel==0.9',
         'SQLAlchemy>=0.9',
         'hashids==0.8.4',
-        'Pygments==1.6',
+        'Pygments==2.7.4',
     ],
     include_package_data=True,
     zip_safe=False,
